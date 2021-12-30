@@ -25,5 +25,5 @@
     "noEmit": false,
   },
   "exclude": ["node_modules"],
-  "include": ["./server/**/*", "./index.d.ts"],
+  "include": ["./**/*", "./@types/index.d.ts"],
 }

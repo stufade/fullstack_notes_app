@@ -2,7 +2,7 @@
   "name": "todolist",
   "version": "0.1.0",
   "scripts": {
-    "start": "nodemon --files server/index.ts",
+    "start": "nodemon --files index.ts",
     "build-server": "tsc",
     "build-client": "cd client && yarn build",
     "build": "yarn build-server && yarn build-client"
