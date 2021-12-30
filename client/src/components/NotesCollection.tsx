@@ -1,15 +1,16 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { NoteInterface } from "../../../types/NoteInterface";
+import NoteType from "../types/NoteType";
 import { AddButton } from "./Button";
+import Name from "./Name";
 import { Note } from "./Note";
 
 const fetchAndSetNotes = (
-	setNotes: React.Dispatch<React.SetStateAction<NoteInterface[]>>
+	setNotes: React.Dispatch<React.SetStateAction<NoteType[]>>
 ) => {
 	axios
-		.get("/api/notes", {
+		.get<NoteType[]>("/api/notes", {
 			headers: {
 				Authorization: `Bearer ${localStorage.getItem("token")}`,
 			},
@@ -21,7 +22,7 @@ const fetchAndSetNotes = (
 const NotesCollection: React.FC = () => {
 	const token = localStorage.getItem("token");
 	const authHeader = { Authorization: `Bearer ${token}` };
-	const [notes, setNotes] = useState<NoteInterface[]>([]);
+	const [notes, setNotes] = useState<NoteType[]>([]);
 
 	useEffect(() => {
 		fetchAndSetNotes(setNotes);
@@ -48,7 +49,9 @@ const NotesCollection: React.FC = () => {
 	}
 
 	return (
-		<div className="mt-10 flex flex-col items-center px-5">
+		<div className="flex flex-col items-center px-5">
+			<Name />
+			<div className="mt-10">
 			<AddButton onClick={handleAddNote}>
 				<>
 					<div className="mr-2">
@@ -56,7 +59,7 @@ const NotesCollection: React.FC = () => {
 					</div>
 					Add Note
 				</>
-			</AddButton>
+			</AddButton></div>
 			<div className="mt-10 flex flex-wrap justify-center">
 				{notes?.map((item) => (
 					<Note

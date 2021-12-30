@@ -1,9 +1,8 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
-import { NoteInterface } from "../../types/NoteInterface";
 import { User } from "./User";
 
 @Entity("notes")
-export class Note implements NoteInterface {
+export class Note {
 	@PrimaryGeneratedColumn()
 	id: number;
 

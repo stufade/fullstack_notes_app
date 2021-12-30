@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { NoteInterface } from "../../../types/NoteInterface";
+import NoteType from "../types/NoteType";
 
 interface NoteProps {
-	note: NoteInterface;
+	note: NoteType;
 	deleteNote: () => void;
 }
 

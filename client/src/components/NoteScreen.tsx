@@ -1,23 +1,24 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Navigate, useNavigate, useParams,  } from "react-router-dom";
-import { NoteInterface } from "../../../types/NoteInterface";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
+import NoteType from "../types/NoteType";
 import { AddButton } from "./Button";
+import Name from "./Name";
 
 export const NoteScreen: React.FC = () => {
-	const [note, setNote] = useState<NoteInterface & { status: number}>();
+	const [note, setNote] = useState<NoteType & { status: number }>();
 	const { id } = useParams();
 	const navigator = useNavigate();
 
 	useEffect(() => {
 		axios
-			.get(`/api/notes/${id}`, {
+			.get<NoteType & { status: number}>(`/api/notes/${id}`, {
 				headers: {
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 			})
 			.then(({ data }) => setNote(data))
-			.catch(e => setNote(e.response));
+			.catch((e) => setNote(e.response));
 	}, [setNote, id]);
 
 	if (!note) {
@@ -25,8 +26,8 @@ export const NoteScreen: React.FC = () => {
 	}
 
 	if (note.status) {
-		return <Navigate to="/" />
-	} 
+		return <Navigate to="/" />;
+	}
 	const handleTitleChange = (e: React.FormEvent<HTMLInputElement>) => {
 		setNote({ ...note, title: e.currentTarget.value });
 	};
@@ -58,6 +59,7 @@ export const NoteScreen: React.FC = () => {
 
 	return (
 		<div>
+			<Name />
 			<div className="flex gap-4 justify-center mt-10">
 				<AddButton onClick={handleSaveChanges}>Save</AddButton>
 				<AddButton onClick={handleDiscardChanges}>
