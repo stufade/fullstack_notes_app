@@ -3,31 +3,32 @@ import { useEffect, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import NoteType from "../types/NoteType";
 import { AddButton } from "./Button";
-import Name from "./Name";
 
 export const NoteScreen: React.FC = () => {
-	const [note, setNote] = useState<NoteType & { status: number }>();
+	const [note, setNote] = useState<NoteType>();
+	const [error, setError] = useState<Error>();
 	const { id } = useParams();
 	const navigator = useNavigate();
 
 	useEffect(() => {
 		axios
-			.get<NoteType & { status: number}>(`/api/notes/${id}`, {
+			.get<NoteType>(`/api/notes/${id}`, {
 				headers: {
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 			})
 			.then(({ data }) => setNote(data))
-			.catch((e) => setNote(e.response));
-	}, [setNote, id]);
+			.catch((err: Error) => setError(err));
+	}, [id]);
 
 	if (!note) {
 		return null;
 	}
 
-	if (note.status) {
+	if (error) {
 		return <Navigate to="/" />;
 	}
+
 	const handleTitleChange = (e: React.FormEvent<HTMLInputElement>) => {
 		setNote({ ...note, title: e.currentTarget.value });
 	};
@@ -36,8 +37,8 @@ export const NoteScreen: React.FC = () => {
 		setNote({ ...note, content: e.currentTarget.value });
 	};
 
-	const handleSaveChanges = () => {
-		axios.put(
+	const handleSaveChanges = async () => {
+		await axios.put(
 			`/api/notes/${id}`,
 			{
 				title: note.title,
@@ -59,7 +60,6 @@ export const NoteScreen: React.FC = () => {
 
 	return (
 		<div>
-			<Name />
 			<div className="flex gap-4 justify-center mt-10">
 				<AddButton onClick={handleSaveChanges}>Save</AddButton>
 				<AddButton onClick={handleDiscardChanges}>

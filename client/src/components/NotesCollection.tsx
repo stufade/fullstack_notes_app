@@ -3,34 +3,32 @@ import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import NoteType from "../types/NoteType";
 import { AddButton } from "./Button";
-import Name from "./Name";
 import { Note } from "./Note";
-
-const fetchAndSetNotes = (
-	setNotes: React.Dispatch<React.SetStateAction<NoteType[]>>
-) => {
-	axios
-		.get<NoteType[]>("/api/notes", {
-			headers: {
-				Authorization: `Bearer ${localStorage.getItem("token")}`,
-			},
-		})
-		.then(({ data }) => setNotes(data))
-		.catch((err) => setNotes(err));
-};
-
 const NotesCollection: React.FC = () => {
 	const token = localStorage.getItem("token");
 	const authHeader = { Authorization: `Bearer ${token}` };
+
 	const [notes, setNotes] = useState<NoteType[]>([]);
+	const [error, setError] = useState<Error>();
+
+	const fetchAndSetNotes = async () => {
+		await axios
+			.get<NoteType[]>("/api/notes", {
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+			})
+			.then(({ data }) => setNotes(data))
+			.catch((err: Error) => setError(err));
+	};
 
 	useEffect(() => {
-		fetchAndSetNotes(setNotes);
-	}, [setNotes]);
+		fetchAndSetNotes();
+	}, []);
 
 	const handleAddNote = () => {
 		axios.post("/api/notes", {}, { headers: authHeader }).then(() => {
-			fetchAndSetNotes(setNotes);
+			fetchAndSetNotes();
 		});
 	};
 
@@ -39,27 +37,27 @@ const NotesCollection: React.FC = () => {
 			axios
 				.delete(`/api/notes/${id}`, { headers: authHeader })
 				.then(() => {
-					fetchAndSetNotes(setNotes);
+					fetchAndSetNotes();
 				});
 		};
 	};
 
-	if (!Array.isArray(notes)) {
+	if (error) {
 		return <Navigate to="/register" />;
 	}
 
 	return (
 		<div className="flex flex-col items-center px-5">
-			<Name />
 			<div className="mt-10">
-			<AddButton onClick={handleAddNote}>
-				<>
-					<div className="mr-2">
-						<img src="./plus.svg" alt="Plus" className="w-5" />
-					</div>
-					Add Note
-				</>
-			</AddButton></div>
+				<AddButton onClick={handleAddNote}>
+					<>
+						<div className="mr-2">
+							<img src="./plus.svg" alt="Plus" className="w-5" />
+						</div>
+						Add Note
+					</>
+				</AddButton>
+			</div>
 			<div className="mt-10 flex flex-wrap justify-center">
 				{notes?.map((item) => (
 					<Note

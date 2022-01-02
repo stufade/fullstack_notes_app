@@ -6,7 +6,10 @@ import CustomError from "../errors/CustomError";
 export const getAllNotes = async (req: Request, res: Response) => {
 	const user = req.user;
 
-	const notes = await getConnection().manager.find(Note, { user });
+	const notes = await getConnection().manager.find(Note, {
+		order: { id: 1 },
+		where: { user },
+	});
 
 	res.json(notes);
 };
@@ -39,7 +42,10 @@ export const getNote = async (req: Request, res: Response) => {
 	const user = req.user;
 	const { id: noteID } = req.params;
 
-	const note = await getConnection().manager.findOne(Note, { id: +noteID, user });
+	const note = await getConnection().manager.findOne(Note, {
+		id: +noteID,
+		user,
+	});
 
 	if (!note) {
 		throw new CustomError("No task with this id", 404);
@@ -53,7 +59,10 @@ export const changeNote = async (req: Request, res: Response) => {
 	const { id: noteID } = req.params;
 	const { title, content } = req.body;
 
-	const note = await getConnection().manager.findOne(Note, { id: +noteID, user });
+	const note = await getConnection().manager.findOne(Note, {
+		id: +noteID,
+		user,
+	});
 
 	if (!note) {
 		res.status(404).send("No such task");

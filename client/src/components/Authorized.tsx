@@ -1,7 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Outlet } from "react-router-dom";
+import Logout from "./Logout";
 
-const Name = () => {
+const Authorized = () => {
 	const [username, setUsername] = useState("");
 	const token = localStorage.getItem("token");
 
@@ -16,7 +18,15 @@ const Name = () => {
 			.then(({ data }) => setUsername(data.user.name));
 	});
 
-	return <div className="text-6xl font-main text-center mt-5 font-light">{username}</div>;
+	return (
+		<>
+			<Logout />
+			<div className="text-6xl font-main text-center mt-5 font-light">
+				{username}
+			</div>
+			<Outlet />
+		</>
+	);
 };
 
-export default Name;
+export default Authorized;

@@ -18,7 +18,7 @@ export const Note: React.FC<NoteProps> = ({
 		if (s.length <= maxContentLength) {
 			return s;
 		}
-		return content.substring(0, 100) + "...";
+		return content.substring(0, 170) + "...";
 	};
 
 	return (
@@ -30,7 +30,7 @@ export const Note: React.FC<NoteProps> = ({
 				</button>
 			</div>
 			<div
-				className="px-3 py-3 font-main text-xl cursor-pointer min-h-[14rem]"
+				className="px-3 py-3 font-main text-xl cursor-pointer min-h-[14rem] break-words"
 				onClick={() => navigate(`/${id}`)}
 			>
 				{sliceContent(content)}
