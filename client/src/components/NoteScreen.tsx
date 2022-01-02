@@ -21,12 +21,12 @@ export const NoteScreen: React.FC = () => {
 			.catch((err: Error) => setError(err));
 	}, [id]);
 
-	if (!note) {
-		return null;
-	}
-
 	if (error) {
 		return <Navigate to="/" />;
+	}
+
+	if (!note) {
+		return null;
 	}
 
 	const handleTitleChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -67,7 +67,7 @@ export const NoteScreen: React.FC = () => {
 				</AddButton>
 			</div>
 			<div className="min-w-[30%] max-w-[40rem] m-auto mt-10 shadow-md">
-				<div className="">
+				<div>
 					<input
 						value={note.title}
 						onChange={handleTitleChange}

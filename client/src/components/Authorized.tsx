@@ -21,9 +21,9 @@ const Authorized = () => {
 	return (
 		<>
 			<Logout />
-			<div className="text-6xl font-main text-center mt-5 font-light">
+			<h2 className="text-6xl font-main text-center mt-5 font-light">
 				{username}
-			</div>
+			</h2>
 			<Outlet />
 		</>
 	);
