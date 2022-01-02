@@ -1,5 +1,8 @@
 # Fullstack Notes App
 
+## Tests
+- End-to-end - Cypress
+
 ## Frontend
 - Typescript
 - React
