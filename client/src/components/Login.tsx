@@ -23,10 +23,7 @@ const Login: React.FC = () => {
 						.required("Please provide name"),
 					password: Yup.string().required("Please provide password"),
 				})}
-				onSubmit={(
-					{ name, password },
-					{ setSubmitting, setErrors }
-				) => {
+				onSubmit={({ name, password }, { setSubmitting, setErrors }) => {
 					axios
 						.post("/api/auth/login", {
 							name,
@@ -39,26 +36,23 @@ const Login: React.FC = () => {
 
 							localStorage.setItem("token", token);
 						})
+						.then(() => {
+							setSubmitting(false);
+							navigate("/");
+						})
 						.catch((err) => {
 							const {
 								data: { error },
 							} = err.response;
 							setErrors({ password: error });
-						})
-						.then(() => {
 							setSubmitting(false);
-							navigate("/");
 						});
 				}}
 			>
 				{({ isSubmitting }) => (
 					<Form>
 						<TextInput label="Name:" type="text" name="name" />
-						<TextInput
-							label="Password:"
-							type="password"
-							name="password"
-						/>
+						<TextInput label="Password:" type="password" name="password" />
 						<button
 							type="submit"
 							disabled={isSubmitting}
